@@ -1,18 +1,13 @@
 {
-  "name": "nittonlineportal",
+  "name": "server",
   "version": "2.0.1",
   "description": "\"Online Portal for Students and Professors\"",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd ../client && npm run build",
-    "install-client": "cd ../client && npm install",
-    "heroku-postbuild": "npm run install-client && npm run build",
     "start": "nodemon server.js",
-    "server-start":"node server.js",
-    "client": "cd ../client && npm run start",
-    "dev": "concurrently -n 'server,client' -c 'red,green'  \"nodemon server.js\" \"npm run client\""
+    "server-start": "node server.js"
   },
+  "homepage": "./",
   "keywords": [
     "Students",
     "Professors"
