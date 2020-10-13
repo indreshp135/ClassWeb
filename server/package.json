@@ -1,0 +1,35 @@
+{
+  "name": "nittonlineportal",
+  "version": "2.0.1",
+  "description": "\"Online Portal for Students and Professors\"",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd ../client && npm run build",
+    "install-client": "cd ../client && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "start": "nodemon server.js",
+    "server-start":"node server.js",
+    "client": "cd ../client && npm run start",
+    "dev": "concurrently -n 'server,client' -c 'red,green'  \"nodemon server.js\" \"npm run client\""
+  },
+  "keywords": [
+    "Students",
+    "Professors"
+  ],
+  "author": "Indresh P",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.3.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.28",
+    "multer": "^1.4.2",
+    "multer-gridfs-storage": "^4.2.0",
+    "nodemailer": "^6.4.11",
+    "socket.io": "^2.3.0"
+  }
+}

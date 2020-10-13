@@ -1,0 +1,32 @@
+{
+  "name": "classweb",
+  "version": "1.0.0",
+  "description": "For conducting online classes",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "npm run client-install && npm run server-install && npm run db-install",
+    "db-install": "cd \"database collection creator\" && npm install && cd ..",
+    "server-install": "cd server && npm install && cd ..",
+    "client-install": "cd client && npm install && cd ..",
+    "server": "cd server && npm run start && cd ..",
+    "client": "cd client && npm run start && cd ..",
+    "start" : "cd server && npm run server-start && cd ..",
+    "build": "cd client && npm run build",
+    "install" : "npm run client-install && npm run server-install",
+    "heroku-postbuild": "npm run install && npm run build",
+    "dev": "concurrently -n 'server,client' -c 'red,green'  \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indreshp135/ClassWeb.git"
+  },
+  "author": "Indresh P",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/indreshp135/ClassWeb/issues"
+  },
+  "homepage": "https://github.com/indreshp135/ClassWeb#readme",
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}
