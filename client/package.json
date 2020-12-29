@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:4001",
+  "proxy": "http://localhost:5050",
   "dependencies": {
     "@babel/core": "^7.11.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
