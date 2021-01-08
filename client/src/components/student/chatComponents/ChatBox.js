@@ -7,7 +7,7 @@ import noprof from '../../../images/noprofilepic.png'
 import {Image} from 'react-bootstrap'
 import {recievemessage} from '../../../redux/student/auth/authActions'
 import ScrollableFeed from 'react-scrollable-feed'
-export default function ChatBox() {
+export default function ChatBox(props) {
     const dispatch = useDispatch()
     const [message, setmessage] = useState('')
     const auth = useSelector(state=>state.studentauth);
@@ -15,19 +15,10 @@ export default function ChatBox() {
     const room = auth.class.classname;
     const photo = auth.user.photo
     const name = auth.user.name;
-    const mes = auth.class.messages;
-    const [messages,setMessages] = useState([...mes]);
+    const messages = props.messages;
     const socketRef = useRef();
+    socketRef.current = socket;
     const theme = user.theme;
-    useEffect(()=>{
-        socketRef.current = socket;
-        socketRef.current.on('recieve',data=>{
-            if(data.room===room){
-              dispatch(recievemessage({sentby:data.sentby,photo:data.photo,message:data.message}))
-              setMessages(old=>[...old,{sentby:data.sentby,photo:data.photo,message:data.message}])
-            }
-        })
-    },[room,dispatch])
     const change = (e)=>setmessage(e.target.value)
     const Submit = (e)=>{
         if(message!==''){

@@ -1,5 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router,Switch,Route} from 'react-router-dom';
+import {socket} from './socket'
+import {useDispatch, useSelector} from 'react-redux'
 import FirstPage from './components/FirstPage'
 import ProfLogin from './components/prof/authComponents/Login'
 import ProfRegister from './components/prof/authComponents/Register'
@@ -18,16 +20,52 @@ import Polls from './components/student/pollsComponents/Polls.js'
 import Chat from './components/student/chatComponents/Chat.js'
 import Results from './components/student/resultComponents/Results';
 import {UploadPhotoForm} from './components/prof/mainComponents/UploadPhotoForm' 
-import {useSelector} from 'react-redux';
 import StudentUploadPhotoForm from './components/student/mainComponents/UploadPhotoForm' 
 import OnlineClass from './components/student/onlineclassComponents/OnlineClass'
 import WatchRoom from './components/student/onlineclassComponents/WatchRoom'
 import ProfOnlineClass from './components/prof/onlineclassComponents/OnlineClass'
 import BroadcasrRoom from './components/prof/onlineclassComponents/BroadcastRoom'
+import {onlineclasson} from './redux/student/auth/authActions'
+import {recievemessage} from './redux/student/auth/authActions'
 export default function Routers (){
     const user = useSelector(state => state.user)
     const theme=user.theme;
     const th = theme?"dark1":"light1";
+    const auth = useSelector(state => state.studentauth)
+    const onlineclass = auth && auth.class && auth.class.onlineclass;
+    const room = onlineclass && onlineclass.roomno;
+    const classname = auth && auth.class && auth.class.classname
+    const socketRef = React.useRef();
+    const dispatch = useDispatch();
+    React.useEffect(() => {
+        socketRef.current = socket;
+        socketRef.current.on('endclass',async (data)=>{
+            if(data.roomID===room){
+                const obj = {roomno:null,profname:null,happening:false}
+                dispatch(onlineclasson(obj))
+            }
+        })
+        socketRef.current.on('callroom',data=>{
+            if(data.classname===classname){
+                const obj = {roomno:data.room,profname:data.profname,happening:true}
+                dispatch(onlineclasson(obj))
+            }
+        })
+    }, [classname,room,dispatch])
+
+    const roomName = auth && auth.class && auth.class.classname;
+    const mes = auth && auth.class && auth.class.messages;
+    const [messages,setMessages] = React.useState([...mes]);
+    React.useEffect(()=>{
+        socketRef.current = socket;
+        socketRef.current.on('recieve',data=>{
+            if(data.room===roomName){
+              dispatch(recievemessage({sentby:data.sentby,photo:data.photo,message:data.message}))
+              setMessages(old=>[...old,{sentby:data.sentby,photo:data.photo,message:data.message}])
+            }
+        })
+    },[roomName,dispatch])
+
     return(
         <div className={`whole ${th}`}>
             <Router>
@@ -87,7 +125,7 @@ export default function Routers (){
                         <Polls/>
                     </Route>
                     <Route path="/student/Chat" exact>
-                        <Chat/>
+                        <Chat messages = {messages}/>
                     </Route>
                     <Route path="/student/Online Class" exact>
                         <OnlineClass/>
