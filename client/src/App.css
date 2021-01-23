@@ -9,6 +9,15 @@ body{
     transform:translateY(-50%);
 }
 
+.w-100{
+  width: 100%;
+}
+
+.ta-center {
+  text-align: center;
+}
+
+
 @media screen and (max-width:768px)
 {
     #sizer{

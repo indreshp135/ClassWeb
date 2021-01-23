@@ -4,11 +4,12 @@ import Sidebar from "../mainComponents/Sidebar";
 import { useSelector } from "react-redux";
 import { Container, Row, Col } from "react-bootstrap";
 import { Table } from "reactstrap";
-const StudyMaterials = () => {
+const Assignments = () => {
     const user = useSelector(state => state.user);
     const theme = user.theme;
     const auth = useSelector(state => state.studentauth);
-    const studymaterials = auth.class.studymaterial;
+    const assignments = auth.class.assignment;
+    console.log(assignments)
     const subjects = auth.class.subjects;
     const light = subjects.map(subject => (
         <React.Fragment>
@@ -24,18 +25,22 @@ const StudyMaterials = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {studymaterials.map(studymaterial =>
-                        subject.coursecode === studymaterial.coursecode ? (
+                    {assignments.map(assignment =>
+                        subject.coursecode === assignment.coursecode ? (
                             <tr>
                                 <td>
                                     <a
                                         className="text-secondary"
                                         rel="noopener noreferrer"
-                                        href={`/file/${studymaterial.filename}`}
+                                        href={`/file/${assignment.filename}`}
                                         target="_blank"
                                     >
-                                        {studymaterial.originalname}
+                                        {assignment.originalname}
+                                        <br/>
+                                        {assignment.question}
                                     </a>
+                                    
+                                    <br/>
                                 </td>
                             </tr>
                         ) : null
@@ -60,17 +65,19 @@ const StudyMaterials = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {studymaterials.map(studymaterial =>
-                        subject.coursecode === studymaterial.coursecode ? (
+                    {assignments.map(assignment =>
+                        subject.coursecode === assignment.coursecode ? (
                             <tr>
                                 <td>
                                     <a
                                         rel="noopener noreferrer"
-                                        href={`/file/${studymaterial.filename}`}
+                                        href={`/file/${assignment.filename}`}
                                         className="text-white"
                                         target="_blank"
                                     >
-                                        {studymaterial.originalname}
+                                        {assignment.originalname}
+                                        <br/>
+                                        {assignment.question}
                                     </a>
                                 </td>
                             </tr>
@@ -91,7 +98,7 @@ const StudyMaterials = () => {
                         {subjects.length !== 0 ? (
                             theme ? (
                                 <div className="dark-color">
-                                    <h2>Study Material</h2>
+                                    <h2>Assignments</h2>
                                     <br />
                                     {dark}
                                 </div>
@@ -125,4 +132,4 @@ const StudyMaterials = () => {
     );
 };
 
-export default StudyMaterials;
+export default Assignments;

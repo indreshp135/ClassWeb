@@ -1,56 +1,41 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import Progress from "./Progress";
+// import Progress from "./Progress";
 import axios from "axios";
 import { Input } from "reactstrap";
+import NavBar from "../mainComponents/NavBar";
+import Sidebar from "../mainComponents/Sidebar";
+import { Container, Row, Col } from "react-bootstrap";
 
-const FileUpload = () => {
+export default function NewAssignment() {
+    const [question, setQuestion] = useState("");
     const [file, setFile] = useState("");
-    const [filename, setFilename] = useState("Choose File");
-    const [uploadPercentage, setUploadPercentage] = useState(0);
+    const [filename, setFilename] = useState("Choose file");
+    const [cla, setCla] = useState("select");
+    const [subject, setSubject] = useState("");
+
     const onChange = e => {
         setFile(e.target.files[0]);
         setFilename(e.target.files[0].name);
     };
-    const auth = useSelector(state => state.profauth);
-    const profname = auth.user.name;
-    const subjects = auth.user.classroom;
-    const classnameoptions = subjects.map(op => (
-        <option>{op.classname}</option>
-    ));
-    const coursecodeoptions = subjects.map(op => (
-        <option>{op.coursecode}</option>
-    ));
-    const [cla, setCla] = useState("select");
-    const [subject, setSubject] = useState("");
     const cc = e => setCla(e.target.value);
     const ss = e => setSubject(e.target.value);
-    const user = useSelector(state => state.user);
-    const theme = user.theme;
+    const qq = e => setQuestion(e.target.value);
     const onSubmit = async e => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", file)
+        formData.append('question', question)
+        const ans = formData.getAll("question");
+        console.log(ans);
 
         try {
             await axios.post(
-                `/upload/${profname}/${subject}/${cla}`,
+                `/assign/${profname}/${subject}/${cla}`,
                 formData,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                    },
-                    onUploadProgress: progressEvent => {
-                        setUploadPercentage(
-                            parseInt(
-                                Math.round(
-                                    (progressEvent.loaded * 100) /
-                                        progressEvent.total
-                                )
-                            )
-                        );
-                        // Clear percentage
-                        setTimeout(() => setUploadPercentage(0), 10000);
                     },
                 }
             );
@@ -59,10 +44,23 @@ const FileUpload = () => {
         }
     };
 
+    const auth = useSelector(state => state.profauth);
+    const profname = auth.user.name;
+    const subjects = auth.user.classroom;
+    const user = useSelector(state => state.user);
+    const theme = user.theme;
+
+    const classnameoptions = subjects.map(op => (
+        <option>{op.classname}</option>
+    ));
+    const coursecodeoptions = subjects.map(op => (
+        <option>{op.coursecode}</option>
+    ));
+
     const light = (
         <div>
             <br />
-            <h5>Study Material</h5>
+            <h5>Assignment</h5>
             <form onSubmit={onSubmit}>
                 <div className="custom-file mb-4">
                     <Input
@@ -71,7 +69,6 @@ const FileUpload = () => {
                         id="customFile"
                         onChange={onChange}
                     />
-                    <Progress percentage={uploadPercentage} />
                     <br />
                     <Input type="select" onChange={cc}>
                         {subjects.length !== 0 ? (
@@ -94,7 +91,13 @@ const FileUpload = () => {
                         {filename}
                     </label>
                 </div>
-
+                <input
+                    type="text"
+                    onChange={qq}
+                    className="form-control mt-4"
+                    placeholder="EnterQuestion"
+                />
+                <br />
                 <input
                     type="submit"
                     value="Upload"
@@ -106,16 +109,16 @@ const FileUpload = () => {
     const dark = (
         <div className="dark-color">
             <br />
-            <h5>Study Material</h5>
+            <h5>Assignment</h5>
             <form onSubmit={onSubmit}>
-                <div className="custom-file mb-4">
+                <div className=" custom-file mb-4">
                     <Input
                         type="file"
                         className="custom-file-input dark2 text-white"
                         id="customFile"
                         onChange={onChange}
                     />
-                    <Progress percentage={uploadPercentage} className="dark2" />
+
                     <br />
                     <Input
                         type="select"
@@ -150,6 +153,13 @@ const FileUpload = () => {
                     </label>
                 </div>
                 <input
+                    type="text"
+                    onChange={qq}
+                    className="form-control dark2 text-white mt-4"
+                    placeholder="EnterQuestion"
+                />
+                <br />
+                <input
                     type="submit"
                     value="Upload"
                     className="btn btn-primary btn-block mt-4"
@@ -157,7 +167,30 @@ const FileUpload = () => {
             </form>
         </div>
     );
-    return theme ? dark : light;
-};
-
-export default FileUpload;
+    return (
+        <React.Fragment>
+            <NavBar />
+            <Container fluid>
+                <Row>
+                    <Col sm={8} className="justify-content-center">
+                        {/* <span className="w-100 vertical-center ta-center">
+                            <Link to="/prof/NewAssignment">
+                                Create new Assignment
+                            </Link>
+                            <br />
+                            <br />
+                            <br />
+                            <Link to="/prof/ManageAssignments">
+                                Manage Assignment
+                            </Link>
+                        </span> */}
+                        {theme ? dark : light}
+                    </Col>
+                    <Col sm={4} className="d-flex justify-content-center">
+                        <Sidebar />
+                    </Col>
+                </Row>
+            </Container>
+        </React.Fragment>
+    );
+}

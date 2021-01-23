@@ -29,6 +29,13 @@ const ProfSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  assignment:[{
+    question: { type: String, default: true },
+    profname: { type: String, require: true },
+    coursecode: { type: String, require: true },
+    filename: String,
+    originalname: String,
+}],
   timetable:mongoose.Schema.Types.ObjectId,
 });
 
