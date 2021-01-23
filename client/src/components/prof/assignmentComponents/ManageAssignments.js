@@ -4,12 +4,18 @@ import Sidebar from "../mainComponents/Sidebar";
 import { useSelector } from "react-redux";
 import { Container, Row, Col } from "react-bootstrap";
 import { Table } from "reactstrap";
-const StudyMaterials = () => {
+import {Link } from 'react-router-dom'
+const ManageAssignments = () => {
     const user = useSelector(state => state.user);
     const theme = user.theme;
-    const auth = useSelector(state => state.studentauth);
-    const studymaterials = auth.class.studymaterial;
-    const subjects = auth.class.subjects;
+    const auth = useSelector(state => state.profauth);
+    console.log(auth);
+    const assignments = auth.user.assignment;
+    console.log(assignments)
+    const subjects = auth.user.classroom;
+
+    
+
     const light = subjects.map(subject => (
         <React.Fragment>
             <Table bordered striped>
@@ -17,25 +23,29 @@ const StudyMaterials = () => {
                     <tr>
                         <th>
                             <h4>
-                                <u>{subject.coursecode}</u>
+                                <u>{subject.classname}</u>
                             </h4>
-                            {subject.profname}
+                            {subject.coursecode}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {studymaterials.map(studymaterial =>
-                        subject.coursecode === studymaterial.coursecode ? (
+                    {assignments.map(assignment =>
+                        subject.coursecode === assignment.coursecode ? (
                             <tr>
                                 <td>
-                                    <a
+                                    <Link
                                         className="text-secondary"
-                                        rel="noopener noreferrer"
-                                        href={`/file/${studymaterial.filename}`}
-                                        target="_blank"
+                                        to = {`/prof/EditAssignment/${assignment._id}`}
                                     >
-                                        {studymaterial.originalname}
-                                    </a>
+                                        {assignment.originalname}
+                                        <br/>
+                                        {assignment.question}
+                                        <br/>
+                                        {assignment.classname}
+                                    </Link>
+                                    
+                                    <br/>
                                 </td>
                             </tr>
                         ) : null
@@ -53,24 +63,26 @@ const StudyMaterials = () => {
                     <tr>
                         <th>
                             <h4>
-                                <u>{subject.coursecode}</u>
+                                <u>{subject.classname}</u>
                             </h4>
-                            {subject.profname}
+                            {subject.coursecode}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {studymaterials.map(studymaterial =>
-                        subject.coursecode === studymaterial.coursecode ? (
+                    {assignments.map(assignment =>
+                        subject.coursecode === assignment.coursecode ? (
                             <tr>
                                 <td>
                                     <a
                                         rel="noopener noreferrer"
-                                        href={`/file/${studymaterial.filename}`}
+                                        href={`/file/${assignment.filename}`}
                                         className="text-white"
                                         target="_blank"
                                     >
-                                        {studymaterial.originalname}
+                                        {assignment.originalname}
+                                        <br/>
+                                        {assignment.question}
                                     </a>
                                 </td>
                             </tr>
@@ -91,7 +103,7 @@ const StudyMaterials = () => {
                         {subjects.length !== 0 ? (
                             theme ? (
                                 <div className="dark-color">
-                                    <h2>Study Material</h2>
+                                    <h2>Assignments</h2>
                                     <br />
                                     {dark}
                                 </div>
@@ -125,4 +137,4 @@ const StudyMaterials = () => {
     );
 };
 
-export default StudyMaterials;
+export default ManageAssignments;
