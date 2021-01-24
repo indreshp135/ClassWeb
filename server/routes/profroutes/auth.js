@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
       
       const tt = await Timetable.findById(user.timetable)
 
-      console.log(user.assignment)
+      // console.log(user.assignment)
       
       // console.log(tt);
       res.status(200).json({

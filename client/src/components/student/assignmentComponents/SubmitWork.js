@@ -1,58 +1,41 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import {useParams, useHistory} from 'react-router-dom'
 // import Progress from "./Progress";
 import axios from "axios";
 import { Input } from "reactstrap";
 import NavBar from "../mainComponents/NavBar";
 import Sidebar from "../mainComponents/Sidebar";
 import { Container, Row, Col } from "react-bootstrap";
+import {useParams} from 'react-router-dom'
 
-export default function EditAssignment() {
-    const auth = useSelector(state => state.profauth);
-    const profname = auth.user.name;
-    const subjects = auth.user.classroom;
+export default function SubmitWork() {
+    const [comment, setComment] = useState("");
+    const [file, setFile] = useState("");
+    const [filename, setFilename] = useState("Choose file");
+    const {id} = useParams()
+    const auth = useSelector(state => state.studentauth);
+    const studentname = auth.user.name;
+    const subjects = auth.class.subjects;
+    const assignments = auth.class.assignment
     const user = useSelector(state => state.user);
     const theme = user.theme;
-
-    const assignments = auth.user.assignment;
-
-    const {id} = useParams();
-
-    let assignment;
-    let i
-    for(i in assignments) {
-        if(assignments[i]._id === id)
-            assignment = assignments[i]
-    }
-    
-    
-    const history = useHistory();
-    const [question, setQuestion] = useState(assignment.question);
-    const [file, setFile] = useState("");
-    const [filename, setFilename] = useState(assignment.originalname);
-    const [cla, setCla] = useState(assignment.classname);
-    const [subject, setSubject] = useState(assignment.coursecode);
 
     const onChange = e => {
         setFile(e.target.files[0]);
         setFilename(e.target.files[0].name);
     };
-    const cc = e => setCla(e.target.value);
-    const ss = e => setSubject(e.target.value);
-    const qq = e => setQuestion(e.target.value);
+    const qq = e => setComment(e.target.value);
     const onSubmit = async e => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("file", file)
-        formData.append('question', question)
-        const ans = formData.getAll("question");
+        formData.append('comment', comment)
+        const ans = formData.getAll("comment");
         console.log(ans);
-        console.log(question, filename, cla, subject)
 
         try {
-            await axios.put(
-                `/assign/${profname}/${subject}/${cla}/${id}`,
+            await axios.post(
+                `/submit/${auth.user.regno}/${id}`,
                 formData,
                 {
                     headers: {
@@ -67,12 +50,12 @@ export default function EditAssignment() {
 
     
 
-    const classnameoptions = subjects.map(op => (
-        <option>{op.classname}</option>
-    ));
-    const coursecodeoptions = subjects.map(op => (
-        <option>{op.coursecode}</option>
-    ));
+    // const classnameoptions = subjects.map(op => (
+    //     <option>{op.classname}</option>
+    // ));
+    // const coursecodeoptions = subjects.map(op => (
+    //     <option>{op.coursecode}</option>
+    // ));
 
     const light = (
         <div>
@@ -87,25 +70,7 @@ export default function EditAssignment() {
                         onChange={onChange}
                     />
                     <br />
-                    <Input type="text" onChange={cc} value = {cla}>
-                        {/* {subjects.length !== 0 ? (
-                            <option>{cla}</option>
-                        ) : (
-                            <option>Join a class </option>
-                        )} */}
-                        {/* {classnameoptions} */}
-                        
-                    </Input>
-                    <br />
-                    <Input type="text" onChange={ss} value = {subject}>
-                        {/* {subjects.length !== 0 ? (
-                            <option>{subject}</option>
-                        ) : (
-                            <option>Join a class </option>
-                        )} */}
-                        {/* {coursecodeoptions} */}
-                        
-                    </Input>
+              
                     <label className="custom-file-label" htmlFor="customFile">
                         {filename}
                     </label>
@@ -113,9 +78,8 @@ export default function EditAssignment() {
                 <input
                     type="text"
                     onChange={qq}
-                    value = {question}
                     className="form-control mt-4"
-                    placeholder="EnterQuestion"
+                    placeholder="EnterComment"
                 />
                 <br />
                 <input
@@ -140,25 +104,7 @@ export default function EditAssignment() {
                     />
 
                     <br />
-                    <Input type="text" onChange={cc} className='dark2 text-white' value = {cla}>
-                        {/* {subjects.length !== 0 ? (
-                            <option>{cla}</option>
-                        ) : (
-                            <option>Join a class </option>
-                        )} */}
-                        {/* {classnameoptions} */}
-                        
-                    </Input>
-                    <br />
-                    <Input type="text" onChange={ss} className='dark2 text-white' value = {subject}>
-                        {/* {subjects.length !== 0 ? (
-                            <option>{subject}</option>
-                        ) : (
-                            <option>Join a class </option>
-                        )} */}
-                        {/* {coursecodeoptions} */}
-                        
-                    </Input>
+                    
                     <label
                         className="custom-file-label dark2 text-white"
                         htmlFor="customFile"
@@ -170,8 +116,7 @@ export default function EditAssignment() {
                     type="text"
                     onChange={qq}
                     className="form-control dark2 text-white mt-4"
-                    placeholder="EnterQuestion"
-                    value = {question}
+                    placeholder="EnterComment"
                 />
                 <br />
                 <input

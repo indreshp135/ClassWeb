@@ -32,6 +32,8 @@ import { onlineclasson } from "./redux/student/auth/authActions";
 import { recievemessage } from "./redux/student/auth/authActions";
 import ManageAssignments from "./components/prof/assignmentComponents/ManageAssignments";
 import EditAssignment from "./components/prof/assignmentComponents/EditAssignment";
+import ViewSubmissions from "./components/prof/assignmentComponents/ViewSubmissions";
+import SubmitWork from "./components/student/assignmentComponents/SubmitWork";
 export default function Routers() {
     const user = useSelector(state => state.user);
     const theme = user.theme;
@@ -122,6 +124,9 @@ export default function Routers() {
                     <Route path="/prof/EditAssignment/:id" exact>
                         <EditAssignment />
                     </Route>
+                    <Route path="/prof/ViewSubmissions/:id" exact>
+                        <ViewSubmissions />
+                    </Route>
                     <Route path="/prof/Appoint CR" exact>
                         <ProfAppointCR />
                     </Route>
@@ -157,6 +162,9 @@ export default function Routers() {
                     </Route>
                     <Route path="/student/Polls" exact>
                         <Polls />
+                    </Route>
+                    <Route path="/student/SubmitWork/:id" exact>
+                        <SubmitWork />
                     </Route>
                     <Route path="/student/Chat" exact>
                         <Chat messages={messages} />

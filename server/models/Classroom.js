@@ -43,6 +43,13 @@ const ClassroomSchema = new mongoose.Schema({
             classname: { type: String, require: true },
             filename: String,
             originalname: String,
+            submissions: [
+                {
+                    regno: { type: Number, unique: true, require: true },
+                    filename: String,
+                    originalname: String,
+                },
+            ],
         },
     ],
 });
