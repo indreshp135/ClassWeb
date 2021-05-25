@@ -9,6 +9,7 @@ require('dotenv').config();
 const Prof = require( '../../models/Prof');
 const Token = require( '../../models/Token');
 const Timetable = require( '../../models/Timetable');
+const Classroom = require('../../models/Classroom');
 
 //jwt secret
 const  JWT_SECRET  = process.env.JWT_SECRET;
@@ -37,7 +38,10 @@ router.post('/login', async (req, res) => {
       if (!token) throw Error('Couldnt sign the token');
       
       const tt = await Timetable.findById(user.timetable)
-      console.log(tt);
+
+      // console.log(user.assignment)
+      
+      // console.log(tt);
       res.status(200).json({
         token,
         user: {
@@ -48,6 +52,7 @@ router.post('/login', async (req, res) => {
           dept:user.dept,
           classroom:user.classroom,
           timetable:tt,
+          assignment:user.assignment,
         }
       });
     } catch (e) {

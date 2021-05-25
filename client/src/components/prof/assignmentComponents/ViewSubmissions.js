@@ -2,117 +2,143 @@ import React from "react";
 import NavBar from "../mainComponents/NavBar";
 import Sidebar from "../mainComponents/Sidebar";
 import { useSelector } from "react-redux";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { Table } from "reactstrap";
-const StudyMaterials = () => {
+import { Link, useHistory, useParams } from "react-router-dom";
+const ViewSubmissions = () => {
     const user = useSelector(state => state.user);
     const theme = user.theme;
-    const auth = useSelector(state => state.studentauth);
-    const studymaterials = auth.class.studymaterial;
-    const subjects = auth.class.subjects;
-    const light = subjects.map(subject => (
+    const auth = useSelector(state => state.profauth);
+    console.log(auth);
+    const assignments = auth.user.assignment;
+    let submissions;
+    let i, j;
+    const {id} = useParams()
+    for(i in assignments) {
+        if(assignments[i]._id == id){
+            submissions = assignments[i].submissions
+            
+            console.log(i, submissions);
+            j = i
+        }
+    }
+    console.log(assignments);
+    const subjects = auth.user.classroom;
+    const history = useHistory()
+
+    
+
+    const light = (
         <React.Fragment>
             <Table bordered striped>
                 <thead className="light2">
                     <tr>
                         <th>
                             <h4>
-                                <u>{subject.coursecode}</u>
+                                <u>{assignments[j].coursecode}</u>
                             </h4>
-                            {subject.profname}
+                            {assignments[j].question}
                         </th>
+                        {/* <th></th> */}
                     </tr>
                 </thead>
                 <tbody>
-                    {studymaterials.map(studymaterial =>
-                        subject.coursecode === studymaterial.coursecode ? (
+                    {submissions.map(submission => (
                             <tr>
                                 <td>
-                                    <a
+                                    <span
                                         className="text-secondary"
-                                        rel="noopener noreferrer"
-                                        href={`/file/${studymaterial.filename}`}
-                                        target="_blank"
+                                        // to={`/prof/EditAssignment/${assignment._id}`}
                                     >
-                                        {studymaterial.originalname}
-                                    </a>
+                                        {submission.regno}
+                                    </span>
+
+                                    <br />
                                 </td>
+                                {/* <td align = 'right'>
+                                    <Button variant='light' id={assignment._id} onClick={handleEdit}>Edit</Button>
+                                    <Button variant='light' id={assignment._id} onClick={handleSubmissions}>View Submissions</Button>
+                                </td> */}
                             </tr>
-                        ) : null
+                        )
                     )}
                 </tbody>
             </Table>
             <br />
             <br />
         </React.Fragment>
-    ));
-    const dark = subjects.map(subject => (
+    );
+    const dark = (
         <React.Fragment>
             <Table bordered dark striped>
                 <thead className="dark2">
                     <tr>
                         <th>
                             <h4>
-                                <u>{subject.coursecode}</u>
+                                <u>{assignments[j].coursecode}</u>
                             </h4>
-                            {subject.profname}
+                            {assignments[j].question}
                         </th>
+                        {/* <th></th> */}
                     </tr>
                 </thead>
                 <tbody>
-                    {studymaterials.map(studymaterial =>
-                        subject.coursecode === studymaterial.coursecode ? (
+                    {submissions.map(submission => (
                             <tr>
                                 <td>
-                                    <a
-                                        rel="noopener noreferrer"
-                                        href={`/file/${studymaterial.filename}`}
+                                    <span
                                         className="text-white"
-                                        target="_blank"
+                                        // to={`/prof/EditAssignment/${assignment._id}`}
                                     >
-                                        {studymaterial.originalname}
-                                    </a>
+                                        {submission.regno}
+                                    </span>
+
+                                    <br />
                                 </td>
+                                {/* <td align = 'right'>
+                                    <Button variant='light' id={assignment._id} onClick={handleEdit}>Edit</Button>
+                                    <Button variant='light' id={assignment._id} onClick={handleSubmissions}>View Submissions</Button>
+                                </td> */}
                             </tr>
-                        ) : null
+                        )
                     )}
                 </tbody>
             </Table>
             <br />
             <br />
         </React.Fragment>
-    ));
+    );
     return (
         <React.Fragment>
             <NavBar />
             <Container fluid>
                 <Row>
                     <Col sm={8} className=" justify-content-center">
-                        {subjects.length !== 0 ? (
+                        {submissions.length !== 0 ? (
                             theme ? (
                                 <div className="dark-color">
-                                    <h2>Study Material</h2>
+                                    <h2>Submissions</h2>
                                     <br />
                                     {dark}
                                 </div>
                             ) : (
                                 <React.Fragment>
-                                    <h2>Study Material</h2>
+                                    <h2>Submissions</h2>
                                     <br />
                                     {light}
                                 </React.Fragment>
                             )
                         ) : theme ? (
                             <div className="dark-color">
-                                <h2>Study Material</h2>
+                                <h2>Submissions</h2>
                                 <br />
-                                <span>No Study Materials Sent</span>
+                                <span>No Submissions</span>
                             </div>
                         ) : (
                             <div>
-                                <h2>Study Material</h2>
+                                <h2>Submissions</h2>
                                 <br />
-                                <span>No Study Materials Sent</span>
+                                <span>No Submissions</span>
                             </div>
                         )}
                     </Col>
@@ -125,4 +151,4 @@ const StudyMaterials = () => {
     );
 };
 
-export default StudyMaterials;
+export default ViewSubmissions;

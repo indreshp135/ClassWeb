@@ -12,6 +12,7 @@ const store = createStore(
   persistedState,
   composeEnhancers(applyMiddleware(...middleWare))
 );
+
 store.subscribe(() => {
   saveState(
    store.getState()
